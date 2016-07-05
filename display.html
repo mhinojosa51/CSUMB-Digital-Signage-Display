@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html ng-app='TeacherEd'>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>CSUMB Teacher Education Rise Vision Board</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<style>
+			.panel {width: 1920px; height: 1156px; border: 2px black solid; text-align: center; position: absolute; margin: 0;}
+			.panel h2 {font-size: 70px; color: #002a4e; margin: 0; padding-top: 50px;}
+			.panel h3 {font-size: 50px; color: #446A59; margin: 0;}
+			#building {z-index: 0; background: url('https://storage.googleapis.com/risemedialibrary-22da0ca4-2538-4387-b515-ee28f6e84b64/Building%203%20Display%20Images/Background1.jpg') no-repeat; background-size: cover;}
+			.faculty {margin-top: -90px; margin-bottom: 40px;}
+			
+			#staff {z-index: 0;left: 1920px; background: url('https://storage.googleapis.com/risemedialibrary-22da0ca4-2538-4387-b515-ee28f6e84b64/Building%203%20Display%20Images/Background1.jpg') no-repeat; background-size: cover; -webkit-transform: rotateY(180deg); width: 100%;}
+			.staff-div {padding-top: 10px; -webkit-transform: rotateY(180deg); display: inline-block; width: 50%; }
+			.human {margin-top: -30px;}
+			.headers {font-size: 90px; color: #446A59; width: 100%; text-align: center; white-space: nowrap;}
+			
+			#events { z-index: -1; left: -1920px; background: url('https://storage.googleapis.com/risemedialibrary-22da0ca4-2538-4387-b515-ee28f6e84b64/Building%203%20Display%20Images/Background1_flipped.jpg') no-repeat; background-size: cover;}
+			#events .headers {margin-bottom: -20px;}
+			.events {width: auto; height: auto; margin: 0;} 
+			.events h2 {color: #446A59; font-size: 80px;}
+			.events h3 {color: #446A59; font-size: 60px;}
+			.events h4 {font-size: 45px; color: #8b7e56; margin: 0; margin-top: 20px;}
+			
+			#news {z-index: -1; left: 1920px; background: url('https://storage.googleapis.com/risemedialibrary-22da0ca4-2538-4387-b515-ee28f6e84b64/Building%203%20Display%20Images/Background1.jpg') no-repeat; background-size: cover; text-align: left; }
+			#news h1 {text-align: center;}
+			.new-events div {margin-bottom: 20px;}
+			.new-events div h3{color: #002A4E; margin-left: 50px; font-size: 55px;}
+			.new-events div p {width: 90%; margin-left: 70px; font-size: 35px; margin-top: 5px; color: #446A59;}
+			
+			
+			#guests {z-index: -2; left: -1920px; background: url('https://storage.googleapis.com/risemedialibrary-22da0ca4-2538-4387-b515-ee28f6e84b64/Building%203%20Display%20Images/Background1_flipped.jpg') no-repeat; background-size: cover;}
+			#guests h1 {font-size: 130px;}
+			.guest h2 {font-size: 100px;}
+		
+		</style>
+	</head>
+
+	<body style="width:1920px;height:1080px; margin: 0;">
+		<div class='panel' id='building' ng-controller='FacultyController as faculty'>
+			<h1 class='headers'>Faculty Office Hours for {{faculty.today}}</h1>
+			<div ng-repeat='prof in faculty.professors'>
+				<div class='faculty' ng-show='prof.day === faculty.today'>
+					<h2>Dr. {{ prof.name }}</h2>
+					<h3>{{prof.title}}</h3>
+					<h3>Office Hours: {{ prof.hours }}</h3>
+					<h3>{{prof.location}}</h3>
+				</div>
+			</div>
+			<div ng-show='faculty.today === "Friday"'>
+				<div ng-repeat='prof in faculty.professors'>
+					<div class='faculty' ng-show='prof.friday.indexOf(faculty.friday) !== -1'>
+						<h2>Dr. {{ prof.name }}</h2>
+						<h3>{{prof.title}}</h3>
+						<h3>Office Hours: {{ prof.hours }}</h3>
+						<h3>{{prof.location}}</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='panel' id='staff' ng-controller='StaffController as staff'>
+			<div class='headers'>
+				<h1 class='staff-div headers' >Staff</h1>
+			</div>
+			<div class='staff-div human' ng-repeat='s in staff.staff'>
+				<h2>{{ s.name }}</h2>
+				<h3>{{ s.title }}</h3>
+			</div>
+		</div>
+		<div class='panel' id='events' ng-controller='DeptEvents as events'>
+			<h1 class='headers'>Department Events</h1>
+			<!-- <img ng-src={{events.college}} /> -->
+			<div class='events' ng-repeat="event in events.events">
+              <h2>{{ event.name }}</h2>
+              <h4>{{ event.description }}</h4>
+s              <h4>{{ event.date }}</h4>
+			</div>
+		</div>
+		<div class='panel' id='news'>
+			<h1 class='headers' class='new-events'>Education News</h1>
+			<div class='new-events' ng-controller='NewsController as news'>
+				<div ng-repeat='entry in news.articles'>
+					<h3>{{ entry.title }}</h3>
+					<p>{{ entry.content }}</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- <div class='panel' id='college-o-ed-news'>
+			<h1 class='headers' class='new-events'>Education News</h1>
+			<div class='new-events' ng-controller='EdEvents as ed'>
+				<div ng-repeat='event in ed.events'>
+					<h3>{{ event.name }}</h3>
+					<h5>{{  event.time }}</h5>
+					<h5>{{event.description}}</h5>
+				</div>
+			</div>
+		</div> -->
+	</body>
+	
+	<script language='javascript'>
+		(function(){
+			 
+			var app = angular.module('TeacherEd', []);
+			// faculty controller, checks the day of the week and displays the appropriate faculty office hours for the day.
+			app.controller('FacultyController', function(){
+				this.days = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday', 6:'Saturday'}
+				this.professors = faculty;
+				this.date = new Date()
+				this.today = this.days[this.date.getDay()];
+				this.friday = [this.date.getMonth(), this.date.getDate()].join('');
+				console.log(this.today);
+			});
+			// staff controllers
+			app.controller('StaffController', function(){
+				this.staff = staff;
+			});
+			// events controller, gets RSS feed from csumbs events page to list school wide events.
+			app.controller('EventsController', ['$http', function($http){
+				var events = this;
+				events.nodes = [];
+				events.college = 'https://storage.googleapis.com/risemedialibrary-22da0ca4-2538-4387-b515-ee28f6e84b64/SJCF.jpg';
+				$http.jsonp('//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=https://25livepub.collegenet.com/calendars/csumb-master-calendar.rss').success(function(response){
+					events.nodes = response.responseData.feed.entries.slice(1,5);
+					events.nodes.forEach(function(ev){
+						ev.content = ev.content.replace(/&/g,'&');
+						ev.content = ev.content.replace(/'/g, "'");
+						var re = /.+(?=(am|pm))/g;
+						ev.content = re.exec(ev.content).join('');
+					});
+				});
+				
+			}]);
+			// news controller, gets RSS from ed.gov to list the days education related news items.
+			app.controller('NewsController', ['$http', function($http){
+				var news = this;
+				news.articles = [];
+				
+				$http.jsonp('//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=http://www.ed.gov/feed').success(function(response){
+					news.articles = response.responseData.feed.entries.slice(0,3);
+				});
+			}]);
+			// controller for our departments events
+			app.controller("DeptEvents", function(){
+				// Add Events inside the brackets in the format shown. A set of curly braces and a comma seperating braces from each other. 
+				this.events = collegeEvents;
+			
+			});
+			// controller for guests who are coming to visit our department, usually potential faculty
+			app.controller('GuestsController', function(){
+				this.guests = specialGuests;
+			});
+			
+			var specialGuests = [{name: 'Casey McPherson, M.S', title: 'School Psych Faculty Candidate', day: 22}, {name: 'Dennis Kombe, Ph.D Candidate', title: 'Math Candidate', day: 24}, 
+								 {name: 'Rachel Stein, MA', title: 'School Psych Faculty Candidate', day: 218}];
+			
+			// faculty information
+			var faculty = [
+				{name:'Josh Harrower', title:'Special Education Coordinator', hours:'12 to 2pm', day:'Monday', location: 'Room 159', friday: ['315']},
+				 {name: 'Cathi Draper Rodriguez', title:'Department Chair', hours: '3 to 5pm', day: 'Monday', vip: true, location: 'Room 117', friday: ['322','46']},
+				{name: 'Mark O\'Shea', title:'Professor', hours: '3 to 5pm', day: 'Tuesday', location: 'Room 171', friday: ['38']},
+				 {name: 'Joanna Wong', title: 'Assistant Professor', hours: '12 to 2pm', day: 'Thursday', location: 'Room 109', friday: ['126', '413']},
+				{name: 'Kerrie Chitwood', title: 'Associate Professor', hours: 'Wednesdays', day: 'Thursday', location: 'Room 105', friday: ['-1']},
+				 {name: 'Megan Sulsberger', title: 'Assistant Professor', hours: '12 to 2pm', day: 'Wednesday', location: 'Room 118', friday: ['029', '15', '112']},
+				{name: 'Carolina Valdez', title: 'Assistant Professor', hours: '12 to 2pm', day: 'Tuesday', location: 'Room 114', friday: ['24']},
+				 {name: 'Irene Nares-Guzicki', title: 'Associate Professor', hours: '3 to 5pm', day: 'Wednesday', location: 'Room 110', friday: ['329']},
+				{name: 'Carl Ferguson', title: 'Associate Professor', hours: '3 to 5pm', day: 'Thursday', location: 'Reading Center', friday: ['119']},
+				{name: 'Miguel Lopez', title: 'Associate Professor', hours: '2:15 to 4pm or by appointment', day: 'Wednesday', location: 'Room 167', friday: ['-1']}
+			];
+			// staff information
+			var staff = [
+				{name: 'Sophia Vicuna', title: 'TQP Coordinator'},
+				{name: 'Michael Castro', title: 'Project Assistant'},
+				{name: 'Shawna Gannon', title: 'Admissions Coordinator'},
+				{name: 'Jene Harris', title: 'Program Support Specialist'},
+				{name: 'Michael Hinojosa', title: 'Technology Specialist'},
+				{name: 'Diane Brandell', title: 'Field Placement/Database Coordinator'},
+				{name: 'Christy Jordan', title: 'Credential Analyst'}
+			
+			];
+				
+			var collegeEvents = [
+              {name: "2nd Annual Better Together: California Teachers Summit", location: "", date: "Friday, July 29th", description: "Join a growing community of more than 15,000 teachers across California, learn more at http://www.cateacherssummit.com/" }
+			];
+				
+			var campusEvents = [
+				{name: 'Sample', date: 'Some Day', description: '....'}
+			];
+		})();
+		
+		$(document).ready(function(){
+			// get div panels for animations
+		  var panels = {
+			main : $('#building'),
+			staff: $('#staff'),
+			events: $('#events'),
+			news: $('#news')
+		  };
+		  var Y = 0;
+		  
+		  //create a control "class"
+		  var control = function(start){
+			this.start = start;
+			this.main = $('#building');
+			this.staff = $('#staff');
+			this.events = $('#events');
+			this.news = $('#news');
+			this.guests = $('#guests');
+		  };
+		  // add class function for animating between panels 
+		  control.prototype.scroll = function(){
+			this.start += 1;
+			if(this.start == 1){
+			  this.main.animate({left: -1920}, {duration: 2000});
+			  this.staff.animate({left: 0},{duration: 2000});
+			  this.main.css('z-index',-1);
+			}
+			
+			if(this.start == 2){
+			  this.events.animate({left: 0}, {duration: 2000});
+			  this.staff.animate({left: 1920}, {duration: 2000});
+			  this.staff.css('z-index',-1);
+			  this.news.css('z-index', 0);
+			}
+			
+			if(this.start == 3){
+			  this.events.animate({left: -1920}, {duration: 2000});
+			  this.news.animate({left: 0}, {duration: 2000});
+			 this.guests.css('z-index',0);
+			  this.events.css('z-index', -1);
+			  
+			}
+			
+			if(this.start == 4){
+              this.start = 0;
+				  this.main.css('z-index',0);
+				  this.main.animate({left: 0}, {duration: 2000});
+				this.news.animate({left: 1920}, {duration: 2000});
+				this.news.css('z-index',-1);
+			  
+			}
+		  };
+		  
+		  var move = new control(0);
+		  // call our controls scroll method every minute.
+		  setInterval(function(){move.scroll()},60000);
+		});
+	</script>
+<!-- Warning - Editing the Presentation Data Object incorrectly may result in the Presentation not functioning correctly -->
+	<script language="javascript">
+	<!--
+	var presentationData = {
+	"presentationData": {
+		"id": "ad74f4e7-19c4-4c32-ba0b-191a1a1712fb",
+		"hidePointer": true,
+		"donePlaceholder": null,
+		"placeholders": []
+	}
+};
+	//-->
+	</script>
+<!-- No scripts after this point -->
+</html>
